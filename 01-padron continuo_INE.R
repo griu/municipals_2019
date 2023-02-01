@@ -9,7 +9,9 @@ library(pxR)
 library(ggplot2)
 library(maptools)
 
-setwd("C:/Users/joana/Dropbox/upf/UPF22-23/MEA/DadesEstadistiques")
+
+install.packages("pxR")
+install.packages("maptools")
 
 baixa_fitxers_padro <- function(any, carpeta){
   download.file(paste0("https://ine.es/pcaxisdl/t20/e245/p07/a",any,"/l0/0001.px"),destfile = paste0(carpeta,"/0001.px"))
@@ -21,6 +23,8 @@ baixa_fitxers_padro <- function(any, carpeta){
   return(paste0(paste0(carpeta,"000",1:6,".px")))
 
 }
+
+
 
 # la caroeta ha d'existir abans,sense barra final
 dir_fitxers<- baixa_fitxers_padro(2019,"data/ine/2019")
@@ -43,7 +47,7 @@ px0006W <- px0006 %>% pivot_wider(id_cols="sección",names_from=c(3,1),values_fr
 
 # unim taules
 padro_tot <- px0001W
-padro_tot$ANY <- 2021
+padro_tot$ANY <- 2019
 padro_tot <- padro_tot[,c("sección","ANY",colnames(padro_tot)[!colnames(padro_tot)%in%c("sección","ANY")])]
 
 padro_tot <- merge(padro_tot, px0002W[,c("sección",colnames(px0002W)[!colnames(px0002W)%in%colnames(padro_tot)])], by = "sección")
@@ -75,12 +79,12 @@ sum(padro_tot[padro_tot$sección!="TOTAL","Ambos Sexos_Total"])
 sum(is.na(padro_tot))
 
 ### eleccions
-M20191_SE<-read.csv2("data/electorals/M20191_ME-SE-DM-MU-CO/M20191-Columnes-SE.csv")
-M20151_SE<-read.csv2("data/electorals/M20151_ME-SE-DM-MU-CO/M20151-Columnes-SE.csv")
-A20211_SE<-read.csv2("data/electorals/A20211_ME-SE-DM-MU-CO/A20211-Columnes-SE.csv")
-A20171_SE<-read.csv2("data/electorals/A20171_ME-SE-DM-MU-CO/A20171-Columnes-SE.csv")
-G20192_SE<-read.csv2("data/electorals/G20192_ME-SE-DM-MU-CO/G20192-Columnes-SE.csv")
-G20191_SE<-read.csv2("data/electorals/G20191_ME-SE-DM-MU-CO/G20191-Columnes-SE.csv")
+M20191_SE<-read.csv2("data/electorals/M20191-Columnes-SE.csv")
+#M20151_SE<-read.csv2("data/electorals/M20151-Columnes-SE.csv")
+#A20211_SE<-read.csv2("data/electorals/A20211-Columnes-SE.csv")
+#A20171_SE<-read.csv2("data/electorals/A20171-Columnes-SE.csv")
+#G20192_SE<-read.csv2("data/electorals/G20192-Columnes-SE.csv")
+#G20191_SE<-read.csv2("data/electorals/G20191-Columnes-SE.csv")
 
 arregla_eleccions <- function(df){
   df$id_prov <- sprintf("%02.0f",df$X.Codi.Província)
@@ -93,11 +97,11 @@ arregla_eleccions <- function(df){
 }
 
 M20191_SE <- arregla_eleccions(M20191_SE)
-M20151_SE <- arregla_eleccions(M20151_SE)
-A20211_SE <- arregla_eleccions(A20211_SE)
-A20171_SE <- arregla_eleccions(A20171_SE)
-G20192_SE <- arregla_eleccions(G20192_SE)
-G20191_SE <- arregla_eleccions(G20191_SE)
+#M20151_SE <- arregla_eleccions(M20151_SE)
+#A20211_SE <- arregla_eleccions(A20211_SE)
+#A20171_SE <- arregla_eleccions(A20171_SE)
+#G20192_SE <- arregla_eleccions(G20192_SE)
+#G20191_SE <- arregla_eleccions(G20191_SE)
 
 #  ajuntem
 head(M20191_SE$id_sc)
