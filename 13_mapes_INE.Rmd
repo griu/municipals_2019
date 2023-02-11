@@ -1,0 +1,218 @@
+---
+title: 'Mapes de dades INE'
+author: 'Professor: Ferran Carrascosa'
+date: "11 febrer de 2023"
+output: html_document
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(sf)
+suppressPackageStartupMessages(library(tidyverse))
+```
+
+
+
+# carguem dades
+
+```{r}
+# llegim mapes a futur llegim
+sscc1<- readRDS(file="data/ine/seccionado_2020.rds")
+
+# llegim dades
+df01_W <- readRDS(file="data/ine/dadesRENTA_01.rds")
+
+
+```
+
+
+# icorporem dades al mapa
+
+```{r}
+(noms_vars <- colnames(df01_W))
+
+(noms_vars <- noms_vars[-which(noms_vars %in% c("id_sscc","Periodo"))])
+
+sscc1[,noms_vars] <- df01_W[match(sscc1$CUSEC, df01_W$id_sscc), noms_vars]
+
+```
+
+Veiem resum de dades
+
+```{r}
+summary(sscc1)
+```
+
+
+### Validacions
+
+```{r}
+head(sscc1)
+
+```
+
+
+# Busquem codi municipi CMUN BARCELONA
+
+Barcelona  (en majúscules)
+
+```{r}
+sscc1 %>% filter(grepl("BARCEL", toupper(NMUN))) %>% count(CUMUN,NPRO, NMUN)
+```
+
+veiem que Barcelona es "08019".
+
+Madrid  (en majúscules)
+
+```{r}
+sscc1 %>% filter(grepl("MADRID", toupper(NMUN))) %>% count(CUMUN,NPRO, NMUN)
+```
+
+veiem que Barcelona es "28079".
+
+### seleccioname BCN i MADrid
+
+```{r}
+sscc1_BCN <- sscc1 %>% filter(CUMUN == "08019")
+sscc1_MAD <- sscc1 %>% filter(CUMUN == "28079")
+
+```
+
+
+# Càlcul de quantiles de renta de BCN i MAdrid
+
+```{r}
+sscc1_BCN <- sscc1_BCN %>% 
+  mutate(Renta_neta_media_por_persona_T = 
+           cut(Renta_neta_media_por_persona_, 
+               unique(quantile( Renta_neta_media_por_persona_,seq(0,1,1/7), na.rm=TRUE)),include.lowest=TRUE))
+
+sscc1_MAD <- sscc1_MAD %>% 
+  mutate(Renta_neta_media_por_persona_T = 
+           cut(Renta_neta_media_por_persona_, 
+               unique(quantile( Renta_neta_media_por_persona_,seq(0,1,1/7), na.rm=TRUE)),include.lowest=TRUE))
+
+```
+
+
+Validem Barcelona:
+
+```{r message=FALSE, warning=FALSE}
+
+sscc1_BCN %>% group_by(Renta_neta_media_por_persona_T) %>% 
+  summarise(n=n()
+            , inici_tram = min(Renta_neta_media_por_persona_)
+            , mig_tram = median(Renta_neta_media_por_persona_)
+            , fi_tram = max(Renta_neta_media_por_persona_)
+            )
+
+```
+Validem Barcelona:
+
+```{r message=FALSE, warning=FALSE}
+
+sscc1_MAD %>% group_by(Renta_neta_media_por_persona_T) %>% 
+  summarise(n=n()
+            , inici_tram = min(Renta_neta_media_por_persona_)
+            , mig_tram = median(Renta_neta_media_por_persona_)
+            , fi_tram = max(Renta_neta_media_por_persona_)
+            )
+
+```
+
+# Mapes
+
+
+## mapa de BCN discret
+
+https://ggplot2-book.org/maps.html
+
+```{r message=FALSE, warning=FALSE}
+ggplot() + 
+  geom_sf(data = sscc1_BCN, mapping = aes(fill = Renta_neta_media_por_persona_T), show.legend = TRUE) +
+  theme_void()+
+  labs(fill='Renta Mitjana/Persona') +
+  theme(legend.position = "right"
+        , legend.title=element_text(size=7)
+        , legend.text=element_text(size=7)
+  ) +
+  coord_sf()
+
+```
+
+
+## mapa de BCN discret
+
+viridis: https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html
+
+
+```{r}
+ggplot() + 
+  geom_sf(data = sscc1_BCN, mapping = aes(fill = Renta_neta_media_por_persona_T), show.legend = TRUE) +
+  theme_void()+
+  labs(fill='Renta Mitjana/Persona') +
+  scale_fill_viridis_d()+
+  theme(legend.position = "right"
+        , legend.title=element_text(size=7)
+        , legend.text=element_text(size=7)
+  ) +
+  coord_sf()
+
+```
+
+
+## plasma
+
+```{r}
+
+ggplot() + 
+  geom_sf(data = sscc1_BCN, mapping = aes(fill = Renta_neta_media_por_persona_T), show.legend = TRUE) +
+  theme_void()+
+  labs(fill='Renta Mitjana/Persona') +
+  scale_fill_viridis_d(option = "plasma", direction = -1)+
+  theme(legend.position = "right"
+        , legend.title=element_text(size=7)
+        , legend.text=element_text(size=7)
+  ) +
+  coord_sf()
+
+```
+
+
+## mapa de BCN continu
+
+viridis: https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html
+
+```{r}
+ggplot() + 
+  geom_sf(data = sscc1_BCN, mapping = aes(fill = Renta_neta_media_por_persona_), show.legend = TRUE) +
+  theme_void()+
+  labs(fill='Renta Mitjana/Persona') +
+  scale_fill_viridis_c(option = "C", direction = -1)+
+  theme(legend.position = "right"
+        , legend.title=element_text(size=7)
+        , legend.text=element_text(size=7)
+  ) +
+  coord_sf()
+
+```
+
+
+## mapa de MAD continu
+
+```{r}
+ggplot() + 
+  geom_sf(data = sscc1_MAD, mapping = aes(fill = Renta_neta_media_por_persona_), show.legend = TRUE) +
+  theme_void()+
+  labs(fill='Renta Mitjana/Persona') +
+  scale_fill_viridis_c(option = "C", direction = -1)+
+  theme(legend.position = "right"
+        , legend.title=element_text(size=7)
+        , legend.text=element_text(size=7)
+  ) +
+  coord_sf()
+
+
+```
+
+
