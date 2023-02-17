@@ -20,7 +20,7 @@ suppressPackageStartupMessages(library(tidyverse))
 sscc1<- readRDS(file="data/ine/seccionado_2020.rds")
 
 # llegim dades
-df01_W <- readRDS(file="data/ine/dadesRENTA_01.rds")
+df01_W <- readRDS(file="data/ine/dadesRENTA_01_2020.rds")
 
 
 ```

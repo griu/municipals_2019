@@ -27,6 +27,25 @@ df_sepe_hist_m_2019 <- df_sepe_hist_m %>% filter(ANY==2019)
 dim(df_sepe_hist_m_2019)
 ```
 
+# dades INE
+
+Dades de Gini:
+
+```{r}
+df09_W_2019 <- readRDS(df09_W_2019, file="data/ine/dadesRENTA_09_2019.rds")
+
+dim(df09_W_2019)
+```
+
+
+Dades demografiques:
+
+```{r}
+df10_W_2019 <- readRDS(df10_W_2019, file="data/ine/dadesRENTA_10_2019.rds")
+
+dim(df10_W_2019)
+```
+
 
 # icorporem dades al mapa
 

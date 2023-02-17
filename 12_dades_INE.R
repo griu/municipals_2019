@@ -57,7 +57,7 @@ dim(df10)
 head(df01)
 
 # ordenem dades
-df01_W <- df01 %>% 
+df01_W_2020 <- df01 %>% 
   mutate(id_sscc = substr(Secciones,1,10)
          , var_r = sapply(Indicadores.de.renta.media,function(x) gsub(" ","_",x))
          , Total_R = as.numeric(gsub(",", ".", gsub(".", "", Total, fixed=TRUE), fixed=TRUE))) %>% 
@@ -65,8 +65,16 @@ df01_W <- df01 %>%
   select(id_sscc, Periodo, var_r, Total_R) %>% 
   pivot_wider(names_from=var_r,values_from=Total_R, values_fill = 0)
 
+df01_W_2019 <- df01 %>% 
+  mutate(id_sscc = substr(Secciones,1,10)
+         , var_r = sapply(Indicadores.de.renta.media,function(x) gsub(" ","_",x))
+         , Total_R = as.numeric(gsub(",", ".", gsub(".", "", Total, fixed=TRUE), fixed=TRUE))) %>% 
+  filter(sapply(id_sscc,nchar)>0, Periodo == 2019) %>%
+  select(id_sscc, Periodo, var_r, Total_R) %>% 
+  pivot_wider(names_from=var_r,values_from=Total_R, values_fill = 0)
+
 # ordenem dades
-df09_W <- df09 %>% 
+df09_W_2020 <- df09 %>% 
   mutate(id_sscc = substr(Secciones,1,10)
          , var_r = sapply(Indicadores.de.renta.media,function(x) gsub(" ","_",x))
          , Total_R = as.numeric(gsub(",", ".", gsub(".", "", Total, fixed=TRUE), fixed=TRUE))) %>% 
@@ -74,9 +82,16 @@ df09_W <- df09 %>%
   select(id_sscc, Periodo, var_r, Total_R) %>% 
   pivot_wider(names_from=var_r,values_from=Total_R, values_fill = 0)
 
+df09_W_2019 <- df09 %>% 
+  mutate(id_sscc = substr(Secciones,1,10)
+         , var_r = sapply(Indicadores.de.renta.media,function(x) gsub(" ","_",x))
+         , Total_R = as.numeric(gsub(",", ".", gsub(".", "", Total, fixed=TRUE), fixed=TRUE))) %>% 
+  filter(sapply(id_sscc,nchar)>0, Periodo == 2019) %>%
+  select(id_sscc, Periodo, var_r, Total_R) %>% 
+  pivot_wider(names_from=var_r,values_from=Total_R, values_fill = 0)
 
 # ordenem dades
-df10_W <- df10 %>% 
+df10_W_2020 <- df10 %>% 
   mutate(id_sscc = substr(Secciones,1,10)
          , var_r = sapply(Indicadores.demográficos,function(x) gsub(" ","_",x))
          , Total_R = as.numeric(gsub(",", ".", gsub(".", "", Total, fixed=TRUE), fixed=TRUE))) %>% 
@@ -84,29 +99,56 @@ df10_W <- df10 %>%
   select(id_sscc, Periodo, var_r, Total_R) %>% 
   pivot_wider(names_from=var_r,values_from=Total_R, values_fill = 0)
 
+df10_W_2019 <- df10 %>% 
+  mutate(id_sscc = substr(Secciones,1,10)
+         , var_r = sapply(Indicadores.demográficos,function(x) gsub(" ","_",x))
+         , Total_R = as.numeric(gsub(",", ".", gsub(".", "", Total, fixed=TRUE), fixed=TRUE))) %>% 
+  filter(sapply(id_sscc,nchar)>0, Periodo == 2019) %>%
+  select(id_sscc, Periodo, var_r, Total_R) %>% 
+  pivot_wider(names_from=var_r,values_from=Total_R, values_fill = 0)
+
+
+
+# verifiquem
+colnames(df01_W_2020)
+colnames(df01_W_2019)
+dim(df01_W_2020)
+dim(df01_W_2019)
+summary(df01_W_2020)
+summary(df01_W_2019)
 
 
 # verifiquem
-colnames(df01_W)
-head(df01_W[is.na(df01_W$Renta_neta_media_por_persona_),])
-summary(df01_W)
-
-
-# verifiquem
-colnames(df09_W)
-head(df09_W)
-summary(df09_W)
+colnames(df09_W_2020)
+colnames(df09_W_2019)
+dim(df09_W_2020)
+dim(df09_W_2019)
+summary(df09_W_2020)
+summary(df09_W_2019)
 
 # verifiquem
-colnames(df10_W)
-head(df10_W)
-summary(df10_W)
+colnames(df10_W_2020)
+colnames(df10_W_2019)
+dim(df10_W_2020)
+dim(df10_W_2019)
+summary(df10_W_2020)
+summary(df10_W_2019)
 
 
 # guadem dades
-saveRDS(df01_W, file="data/ine/dadesRENTA_01.rds")
-saveRDS(df09_W, file="data/ine/dadesRENTA_09.rds")
-saveRDS(df10_W, file="data/ine/dadesRENTA_10.rds")
+saveRDS(df01_W_2020, file="data/ine/dadesRENTA_01_2020.rds")
+saveRDS(df09_W_2020, file="data/ine/dadesRENTA_09_2020.rds")
+saveRDS(df10_W_2020, file="data/ine/dadesRENTA_10_2020.rds")
+saveRDS(df01_W_2019, file="data/ine/dadesRENTA_01_2019.rds")
+saveRDS(df09_W_2019, file="data/ine/dadesRENTA_09_2019.rds")
+saveRDS(df10_W_2019, file="data/ine/dadesRENTA_10_2019.rds")
+
 # A futur llegir dades
-readRDS(df01_W, file="data/ine/dadesRENTA_01.rds")
+df01_W_2020 <- readRDS(file="data/ine/dadesRENTA_01_2020.rds")
+df09_W_2020 <- readRDS(file="data/ine/dadesRENTA_09_2020.rds")
+df10_W_2020 <- readRDS(file="data/ine/dadesRENTA_10_2020.rds")
+
+df01_W_2019 <- readRDS(file="data/ine/dadesRENTA_01_2019.rds")
+df09_W_2019 <- readRDS(file="data/ine/dadesRENTA_09_2019.rds")
+df10_W_2019 <- readRDS(file="data/ine/dadesRENTA_10_2019.rds")
 
