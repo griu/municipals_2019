@@ -1,5 +1,5 @@
 #install.packages("rgdal")
-library(rgdal)
+#library(rgdal)
 library(sf)
 library(tidyverse)
 

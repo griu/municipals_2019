@@ -1,0 +1,85 @@
+---
+title: 'Mapes de dades SEPE'
+author: 'Professor: Ferran Carrascosa'
+date: "16 febrer de 2023"
+output: html_document
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(sf)
+suppressPackageStartupMessages(library(tidyverse))
+```
+
+
+
+# carguem dades
+
+```{r}
+# llegim mapes a futur llegim
+sscc1<- readRDS(file="data/ine/seccionado_2020.rds")
+
+# llegim dades SEPE
+df_sepe_hist_m <- readRDS(file="data/SEPE/df_sepe_hist_m.RDS")
+
+df_sepe_hist_m_2019 <- df_sepe_hist_m %>% filter(ANY==2019)
+
+dim(df_sepe_hist_m_2019)
+```
+
+
+# icorporem dades al mapa
+
+```{r}
+(noms_vars <- colnames(df_sepe_hist_m_2019))
+
+(noms_vars <- noms_vars[-which(noms_vars %in% c("id_mun"))])
+
+sscc1[,noms_vars] <- df_sepe_hist_m_2019[match(sscc1$CUMUN, df_sepe_hist_m_2019$id_mun), noms_vars]
+
+```
+
+Veiem resum de dades
+
+```{r}
+summary(sscc1)
+```
+
+
+### Validacions
+
+```{r}
+head(sscc1)
+
+```
+
+
+# Busquem codi municipis CATALUNYA
+
+### seleccioname CATALUNYA
+
+```{r}
+sscc1_CAT <- sscc1 %>% filter(CCA == "09")
+dim(sscc1_CAT)
+```
+
+
+
+## mapa de CAT continu 2019
+
+```{r}
+ggplot() + 
+  geom_sf(data = sscc1_CAT, mapping = aes(fill = n_atur), show.legend = TRUE) +
+  theme_void()+
+  labs(fill='nombre d aturats') +
+  scale_fill_viridis_c(option = "C", direction = -1)+
+  theme(legend.position = "right"
+        , legend.title=element_text(size=7)
+        , legend.text=element_text(size=7)
+  ) +
+  coord_sf()
+
+
+```
+
+
