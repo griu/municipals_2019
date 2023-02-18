@@ -92,3 +92,40 @@ head(df_sepe_hist_m)
 summary(df_sepe_hist_m)
 
 table(df_sepe_hist_m$ANY)
+
+# fusionem amb padro
+padro_mun_2019 <- readRDS(file="data/ine/padro_mun_2019.rds")
+padro_mun_2020 <- readRDS(file="data/ine/padro_mun_2020.rds")
+padro_mun_2021 <- readRDS(file="data/ine/padro_mun_2021.rds")
+
+padro_mun_hist <- rbind(padro_mun_2019,padro_mun_2020,padro_mun_2021)
+
+(noms_vars <- colnames(padro_mun_hist))
+(noms_vars <- noms_vars[-which(noms_vars %in% c("id_mun","id_prov","ANY"))])
+
+df_sepe_hist_m_padro <- merge(df_sepe_hist_m,padro_mun_hist)
+
+dim(df_sepe_hist_m_padro)
+table(df_sepe_hist_m_padro$ANY)
+
+
+df_sepe_hist_m_padro <- df_sepe_hist_m_padro %>% mutate(
+  n_atur_h = n_atur_h_m24 + n_atur_h_25_44 + n_atur_h_M45
+  ,n_atur_d = n_atur_d_m24 + n_atur_d_25_44 + n_atur_d_M45
+  ,t_atur         = ifelse(pob_15_64 == 0,0,n_atur          /  pob_15_64)
+  ,t_atur_m24     = ifelse(pob_15_24 == 0,0,n_atur_m24      /  pob_15_24)
+  ,t_atur_25_44   = ifelse(pob_25_44 == 0,0,n_atur_25_44    /  pob_25_44)
+  ,t_atur_M45     = ifelse(pob_45_64 == 0,0,n_atur_M45      /  pob_45_64)
+  ,t_atur_h       = ifelse(hom_15_64 == 0,0,n_atur_h        /  hom_15_64)
+  ,t_atur_h_m24   = ifelse(hom_15_24 == 0,0,n_atur_h_m24    /  hom_15_24)
+  ,t_atur_h_25_44 = ifelse(hom_25_44 == 0,0,n_atur_h_25_44  /  hom_25_44)
+  ,t_atur_h_M45   = ifelse(hom_45_64 == 0,0,n_atur_h_M45    /  hom_45_64)
+  ,t_atur_d       = ifelse(muj_15_64 == 0,0,n_atur_d        /  muj_15_64)
+  ,t_atur_d_m24   = ifelse(muj_15_24 == 0,0,n_atur_d_m24    /  muj_15_24)
+  ,t_atur_d_25_44 = ifelse(muj_25_44 == 0,0,n_atur_d_25_44  /  muj_25_44)
+  ,t_atur_d_M45   = ifelse(muj_45_64 == 0,0,n_atur_d_M45    /  muj_45_64)
+)
+
+saveRDS(df_sepe_hist_m_padro,file="data/SEPE/df_sepe_hist_m_padro.RDS")
+
+head(df_sepe_hist_m_padro)

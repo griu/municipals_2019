@@ -10,8 +10,8 @@ library(ggplot2)
 library(maptools)
 
 
-install.packages("pxR")
-install.packages("maptools")
+#install.packages("pxR")
+#install.packages("maptools")
 
 baixa_fitxers_padro <- function(any, carpeta){
   download.file(paste0("https://ine.es/pcaxisdl/t20/e245/p07/a",any,"/l0/0001.px"),destfile = paste0(carpeta,"/0001.px"))
@@ -28,14 +28,32 @@ baixa_fitxers_padro <- function(any, carpeta){
 
 # la caroeta ha d'existir abans,sense barra final
 dir_fitxers<- baixa_fitxers_padro(2019,"data/ine/2019")
+dir_fitxers<- baixa_fitxers_padro(2020,"data/ine/2020")
+dir_fitxers<- baixa_fitxers_padro(2021,"data/ine/2021")
 
-# data load 2021
+# data load 2019
 px0001 <- as.data.frame(read.px("data/ine/2019/0001.px"))
 px0002 <- as.data.frame(read.px("data/ine/2019/0002.px"))
 px0003 <- as.data.frame(read.px("data/ine/2019/0003.px"))
 px0004 <- as.data.frame(read.px("data/ine/2019/0004.px"))
 px0005 <- as.data.frame(read.px("data/ine/2019/0005.px"))
 px0006 <- as.data.frame(read.px("data/ine/2019/0006.px"))
+
+# data load 2020
+px0001 <- as.data.frame(read.px("data/ine/2020/0001.px"))
+px0002 <- as.data.frame(read.px("data/ine/2020/0002.px"))
+px0003 <- as.data.frame(read.px("data/ine/2020/0003.px"))
+px0004 <- as.data.frame(read.px("data/ine/2020/0004.px"))
+px0005 <- as.data.frame(read.px("data/ine/2020/0005.px"))
+px0006 <- as.data.frame(read.px("data/ine/2020/0006.px"))
+
+# data load 2021
+px0001 <- as.data.frame(read.px("data/ine/2021/0001.px"))
+px0002 <- as.data.frame(read.px("data/ine/2021/0002.px"))
+px0003 <- as.data.frame(read.px("data/ine/2021/0003.px"))
+px0004 <- as.data.frame(read.px("data/ine/2021/0004.px"))
+px0005 <- as.data.frame(read.px("data/ine/2021/0005.px"))
+px0006 <- as.data.frame(read.px("data/ine/2021/0006.px"))
 
 # primera (dades i tercera zolumna sexo)
 px0001W <- px0001 %>% pivot_wider(id_cols="sección",names_from=c(3,1),values_from="value")
@@ -48,6 +66,8 @@ px0006W <- px0006 %>% pivot_wider(id_cols="sección",names_from=c(3,1),values_fr
 # unim taules
 padro_tot <- px0001W
 padro_tot$ANY <- 2019
+padro_tot$ANY <- 2020
+padro_tot$ANY <- 2021
 padro_tot <- padro_tot[,c("sección","ANY",colnames(padro_tot)[!colnames(padro_tot)%in%c("sección","ANY")])]
 
 padro_tot <- merge(padro_tot, px0002W[,c("sección",colnames(px0002W)[!colnames(px0002W)%in%colnames(padro_tot)])], by = "sección")
@@ -64,6 +84,61 @@ padro_tot$id_mun <-  substr(padro_tot$sección,1,5)
 padro_tot$id_dis <-  substr(padro_tot$sección,1,7)
 padro_tot$id_sc <-   substr(padro_tot$sección,1,10)
 
+saveRDS(padro_tot,file="data/ine/padron_tot_2019.rds")
+saveRDS(padro_tot,file="data/ine/padron_tot_2020.rds")
+saveRDS(padro_tot,file="data/ine/padron_tot_2021.rds")
+
+## llegim
+padro_tot <- readRDS(file="data/ine/padron_tot_2019.rds")
+padro_tot <- readRDS(file="data/ine/padron_tot_2020.rds")
+padro_tot <- readRDS(file="data/ine/padron_tot_2021.rds")
+
+
+# padro municipi
+
+padro_mun <- padro_tot %>% 
+  select(id_mun,id_prov,ANY, starts_with("Ambos Sexos_"), starts_with("Mujeres_"), starts_with("Hombres_")) %>% 
+  mutate(
+    pob_15_64 = `Ambos Sexos_15-19`+`Ambos Sexos_20-24`+`Ambos Sexos_25-29`+`Ambos Sexos_30-34`+
+      `Ambos Sexos_35-39`+`Ambos Sexos_40-44`+`Ambos Sexos_45-49`+`Ambos Sexos_50-54`+
+      `Ambos Sexos_55-59`+`Ambos Sexos_60-64`,
+    muj_15_64 = `Mujeres_15-19`+`Mujeres_20-24`+`Mujeres_25-29`+`Mujeres_30-34`+
+      `Mujeres_35-39`+`Mujeres_40-44`+`Mujeres_45-49`+`Mujeres_50-54`+
+      `Mujeres_55-59`+`Mujeres_60-64`,
+    hom_15_64 = `Hombres_15-19`+`Hombres_20-24`+`Hombres_25-29`+`Hombres_30-34`+
+      `Hombres_35-39`+`Hombres_40-44`+`Hombres_45-49`+`Hombres_50-54`+
+      `Hombres_55-59`+`Hombres_60-64`,
+    pob_15_24 = `Ambos Sexos_15-19`+`Ambos Sexos_20-24`,
+    muj_15_24 = `Mujeres_15-19`+`Mujeres_20-24`,
+    hom_15_24 = `Hombres_15-19`+`Hombres_20-24`,
+    pob_25_44 = `Ambos Sexos_25-29`+`Ambos Sexos_30-34`+`Ambos Sexos_35-39`+`Ambos Sexos_40-44`,
+    muj_25_44 = `Mujeres_25-29`+`Mujeres_30-34`+`Mujeres_35-39`+`Mujeres_40-44`,
+    hom_25_44 = `Hombres_25-29`+`Hombres_30-34`+`Hombres_35-39`+`Hombres_40-44`,
+    pob_45_64 = `Ambos Sexos_45-49`+`Ambos Sexos_50-54`+`Ambos Sexos_55-59`+`Ambos Sexos_60-64`,
+    muj_45_64 = `Mujeres_45-49`+`Mujeres_50-54`+`Mujeres_55-59`+`Mujeres_60-64`,
+    hom_45_64 = `Hombres_45-49`+`Hombres_50-54`+`Hombres_55-59`+`Hombres_60-64`) %>% 
+  group_by(id_mun,id_prov,ANY) %>% 
+  summarise(pob_15_64 = sum(pob_15_64)
+            ,muj_15_64 = sum(muj_15_64)
+            ,hom_15_64 = sum(hom_15_64)
+            ,pob_15_24 = sum(pob_15_24)
+            ,muj_15_24 = sum(muj_15_24)
+            ,hom_15_24 = sum(hom_15_24)
+            ,pob_25_44 = sum(pob_25_44)
+            ,muj_25_44 = sum(muj_25_44)
+            ,hom_25_44 = sum(hom_25_44)
+            ,pob_45_64 = sum(pob_45_64)
+            ,muj_45_64 = sum(muj_45_64)
+            ,hom_45_64 = sum(hom_45_64)) %>% 
+  ungroup()
+
+head(padro_mun)
+
+saveRDS(padro_mun,file="data/ine/padro_mun_2019.rds")
+saveRDS(padro_mun,file="data/ine/padro_mun_2020.rds")
+saveRDS(padro_mun,file="data/ine/padro_mun_2021.rds")
+
+
 # filtrem CAtalunya
 padro_cat <- padro_tot %>% 
   filter(substr(sección,1,2)%in%c("08","17","25","43"))
@@ -78,100 +153,3 @@ sum(padro_tot[padro_tot$sección!="TOTAL","Ambos Sexos_Total"])
 ## no hi han NAs
 sum(is.na(padro_tot))
 
-### eleccions
-M20191_SE<-read.csv2("data/electorals/M20191-Columnes-SE.csv")
-#M20151_SE<-read.csv2("data/electorals/M20151-Columnes-SE.csv")
-#A20211_SE<-read.csv2("data/electorals/A20211-Columnes-SE.csv")
-#A20171_SE<-read.csv2("data/electorals/A20171-Columnes-SE.csv")
-#G20192_SE<-read.csv2("data/electorals/G20192-Columnes-SE.csv")
-#G20191_SE<-read.csv2("data/electorals/G20191-Columnes-SE.csv")
-
-arregla_eleccions <- function(df){
-  df$id_prov <- sprintf("%02.0f",df$X.Codi.Província)
-  df$id_mun  <- sprintf("%05.0f",df$Codi.Municipi)
-  df$id_dis  <- sprintf("%07.0f",100*df$Codi.Municipi + df$Districte)
-  df$id_sc  <- sprintf("%010.0f",100000*df$Codi.Municipi + 1000*df$Districte + df$Secció)
-  
-  return(df)
-  
-}
-
-M20191_SE <- arregla_eleccions(M20191_SE)
-#M20151_SE <- arregla_eleccions(M20151_SE)
-#A20211_SE <- arregla_eleccions(A20211_SE)
-#A20171_SE <- arregla_eleccions(A20171_SE)
-#G20192_SE <- arregla_eleccions(G20192_SE)
-#G20191_SE <- arregla_eleccions(G20191_SE)
-
-#  ajuntem
-head(M20191_SE$id_sc)
-tail(padro_cat$id_sc,20)
-colnames(M20191_SE )[colnames(M20191_SE ) %in%colnames(padro_cat)]
-
-M20191_SE_PAD <- merge(M20191_SE, padro_cat)
-
-dim(M20191_SE_PAD)
-dim(M20191_SE)
-dim(padro_cat)
-
-colnames(M20191_SE_PAD)
-colnames(padro_cat)
-
-# model abstencio
-
-M20191_SE_PAD2 <- M20191_SE_PAD %>% mutate(PER_ABST = Abstenció / Cens
-                                          ,COD_VEG=Nom.Vegueria
-                                          ,COD_PROV=Nom.Província
-                                          ,POR_Municipio=(`Ambos Sexos_Misma Comunidad Autónoma. Misma Provincia. Mismo Municipio`)/
-                                            `Ambos Sexos_Total`
-                                          ,POR_m14=(`Ambos Sexos_0-4`+
-                                                      `Ambos Sexos_5-9`+
-                                                      `Ambos Sexos_10-14`+
-                                                      `Ambos Sexos_0-4`)/`Ambos Sexos_Total`
-                                          ,POR_M80=(`Ambos Sexos_80-84`+
-                                                      `Ambos Sexos_80-84`+
-                                                      `Ambos Sexos_85-89`+
-                                                      `Ambos Sexos_90-94`+
-                                                      `Ambos Sexos_95-99`+
-                                                      `Ambos Sexos_100 y más`
-                                                      )/`Ambos Sexos_Total`
-                                          )
-
-model1 <- lm(PER_ABST ~ COD_VEG + POR_Municipio + POR_m14 + POR_M80, data = M20191_SE_PAD2)
-
-summary(model1)
-
-"Ambos Sexos_Total"
-"Ambos Sexos_Nacidos en España"                                            
-"Ambos Sexos_En la misma Comunidad Autónoma"                               
-"Ambos Sexos_Misma Comunidad Autónoma. Misma Provincia. Mismo Municipio"   
-
-table(M20191_SE_PAD$Nom.Vegueria)
-Nom.Província
-Hombres_Española
-
-[20] "Ambos Sexos_80-84"                                                        
-[21] "Ambos Sexos_85-89"                                                        
-[22] "Ambos Sexos_90-94"                                                        
-[23] "Ambos Sexos_95-99"                                                        
-[24] "Ambos Sexos_100 y más"                                                    
-
-[4] "Ambos Sexos_0-4"                                                          
-[5] "Ambos Sexos_5-9"                                                          
-[6] "Ambos Sexos_10-14"                                                        
-
-
-# variables interessants
-head(M20191_SE$id_dis)
-head(padro_cat)
-Nom.Província
-Codi.Vegueria
-Nom.Vegueria
-Codi.Comarca
-Nom.Comarca
-Nom.Municipi
-Cens
-Participació.20.00 Abstenció Vots.nuls
-Vots.en.blanc Vots.a.candidatures Vots.vàlids
-PSC.CP.Vots ERC.AM.Vots Cs.Vots PP.Vots ERC
-BARCELONA.EN.COMÚ.ECG.Vots

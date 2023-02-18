@@ -1,0 +1,88 @@
+---
+title: 'Mapes Municipi de dades SEPE'
+author: 'Professor: Ferran Carrascosa'
+date: "16 febrer de 2023"
+output: html_document
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(sf)
+suppressPackageStartupMessages(library(tidyverse))
+```
+
+
+
+# carguem dades de Sepe Municipi
+
+```{r}
+# llegim dades SEPE
+df_sepe_hist_m_padro <- readRDS(file="data/SEPE/df_sepe_hist_m_padro.RDS")
+
+df_sepe_hist_m_2019 <- df_sepe_hist_m_padro %>% filter(ANY==2019)
+
+dim(df_sepe_hist_m_2019)
+```
+# Mapes de Municipi
+
+Només tinc ultim any.
+
+```{r}
+mapa_mun <- readRDS(file="data/ign/mapa_mun.rds")
+
+```
+
+
+
+# fusionem dades padro i SEPE
+
+```{r}
+
+(noms_vars <- colnames(df_sepe_hist_m_2019))
+(noms_vars <- noms_vars[-which(noms_vars %in% c("id_mun","id_prov"))])
+mapa_mun[,noms_vars] <- df_sepe_hist_m_2019[match(mapa_mun$CODIGOINE, df_sepe_hist_m_2019$id_mun), noms_vars]
+
+```
+
+
+Veiem resum de dades
+
+```{r}
+summary(mapa_mun)
+```
+
+
+### Validacions
+
+```{r}
+head(mapa_mun)
+
+```
+
+
+### seleccioname CATALUNYA
+
+```{r}
+mapa_mun_CAT <- mapa_mun %>%
+  mutate(id_prov = substr(CODIGOINE,1,2)) %>% 
+  filter(id_prov %in% c("08","17","25","43"))
+
+dim(mapa_mun_CAT)
+```
+
+## mapa de CAT continu 2019
+
+```{r}
+ggplot() + 
+  geom_sf(data = mapa_mun_CAT, mapping = aes(fill = t_atur), colour = NA, show.legend = TRUE) +
+  theme_void()+
+  labs(fill='% atur') +
+  scale_fill_viridis_c(option = "C", direction = -1)+
+  theme(legend.position = "right"
+        , legend.title=element_text(size=7)
+        , legend.text=element_text(size=7)
+  ) +
+  coord_sf()
+
+
+```

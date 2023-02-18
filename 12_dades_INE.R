@@ -108,7 +108,6 @@ df10_W_2019 <- df10 %>%
   pivot_wider(names_from=var_r,values_from=Total_R, values_fill = 0)
 
 
-
 # verifiquem
 colnames(df01_W_2020)
 colnames(df01_W_2019)

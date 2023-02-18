@@ -21,3 +21,11 @@ saveRDS(sscc1, file="data/ine/seccionado_2020.rds")
 
 # Per llegir a futur llegim
 sscc1<- readRDS(file="data/ine/seccionado_2020.rds")
+
+########### MAPAS MUNICIPIO
+
+# llegir mapes
+mapa_mun <- read_sf("data/ign/Municipios_IGN/Municipios_IGN.shp")
+
+# guardem
+saveRDS(mapa_mun, file="data/ign/mapa_mun.rds")
