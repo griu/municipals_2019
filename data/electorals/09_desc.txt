@@ -1,0 +1,21 @@
+tipo	tipo2	width	nom	desc
+numeric	Num.	2	tipo_eleccion	Tipo de elección.
+numeric	Num.	4	anyo_proceso	Año del proceso electoral.
+numeric	Num.	2	mes_proceso	Mes del proceso electoral.
+numeric	Num.	1	num_vuelta	Número de vuelta (en procesos a una sola vuelta = 1) o Número de pregunta en Referéndum.
+numeric	Num.	2	id_ca	Código de la Comunidad Autónoma o 99 si se trata del Total Nacional del C.E.R.A.
+numeric	Num.	10	id_sscc	Código de la Comunidad Autónoma o 99 si se trata del Total Nacional del C.E.R.A.
+character	Alf.	1	control_sscc	Código de la sección (tres dígitos seguidos de un espacio, letra mayúscula u otro dígito).
+character	Alf.	1	id_mesa	Código de la mesa (una letra mayúscula identificando la mesa o una ‘U’ en caso de mesa única).
+numeric	Num.	7	n_censo_ine	Censo del I.N.E.
+numeric	Num.	7	n_escrutinio_censo	Censo de escrutinio o censo C.E.R.A.
+numeric	Num.	7	n_escrutinio_censo_extr	Censo C.E.R.E. en escrutinio (Residentes Extranjeros).
+numeric	Num.	7	n_votantes_censo_extr	Total votantes C.E.R.E. (Residentes Extranjeros).
+numeric	Num.	7	n_partici_primer_av	Votantes del primer avance de participación.
+numeric	Num.	7	n_partici_segund_av	Votantes del segundo avance de participación.
+numeric	Num.	7	n_vot_blanco	Votos en blanco.
+numeric	Num.	7	n_vot_nulos	Votos nulos.
+numeric	Num.	7	n_vot_candidaturas	Votos a candidaturas.
+numeric	Num.	7	n_vot_afirmativ_ref	Votos afirmativos en Referéndum o ceros en otros procesos electorales.
+numeric	Num.	7	n_vot_negativos_ref	Votos negativos en Referéndum o ceros en otros procesos electorales.
+character	Alf.	1	ind_dat_oficiales	Datos oficiales (Si/No).

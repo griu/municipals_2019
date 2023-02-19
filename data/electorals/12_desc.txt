@@ -1,0 +1,19 @@
+tipo	tipo2	width	nom	desc
+numeric	Num.	2	tipo_municipio	Tipo de municipio:
+numeric	Num.	4	anyo_proceso	Año del proceso electoral.
+numeric	Num.	2	mes_proceso	Mes del proceso electoral.
+numeric	Num.	1	num_vuelta	Número de vuelta (en procesos a una sola vuelta = 1).
+numeric	Num.	5	id_mun	Código I.N.E. del municipio.
+numeric	Num.	6	cod_candidatura	Código de la candidatura.
+numeric	Num.	3	n_vot_candidatura	Votos obtenidos por la candidatura.
+numeric	Num.	2	num_candidat_candid	Número de candidatos obtenidos por la candidatura.
+character	Alf.	25	nom_candidato	Nombre del candidato.
+character	Alf.	25	primer_apellido	Primer apellido del candidato.
+character	Alf.	25	segundo_apell	Segundo apellido del candidato.
+character	Alf.	1	genero	Sexo del candidato (Masculino/Femenino).
+character	Num.	2	fecha_nac_dia	Fecha de nacimiento del candidato (DIA).
+character	Num.	2	fecha_nac_mes	Fecha de nacimiento del candidato (MES).
+character	Num.	4	fecha_nac_anyo	Fecha de nacimiento del candidato (AÑO).
+character	Alf.	10	dni	D.N.I. del candidato
+numeric	Num.	3	n_vot_candidato	Votos obtenidos por el candidato.
+character	Alf.	1	ind_dat_oficiales	Candidato elegido (Si/No).

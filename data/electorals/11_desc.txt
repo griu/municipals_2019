@@ -1,0 +1,24 @@
+tipo	tipo2	width	nom	desc
+numeric	Num.	2	tipo_municipio	Tipo de municipio:
+numeric	Num.	4	anyo_proceso	Año del proceso electoral.
+numeric	Num.	2	mes_proceso	Mes del proceso electoral.
+numeric	Num.	1	num_vuelta	Número de vuelta (en procesos a una sola vuelta = 1).
+numeric	Num.	2	id_ca	Código de la Comunidad Autónoma.
+numeric	Num.	5	id_mun	Código I.N.E. del municipio.
+character	Alf.	100	nom_mun	Nombre del municipio.
+numeric	Num.	3	cod_part_jud	Código del Partido Judicial.
+numeric	Num.	3	cod_dipu_pro	Código de la Diputación Provincial.
+numeric	Num.	3	cod_comarca	Código de la comarca.
+numeric	Num.	3	n_pobla_derecho	Población de derecho.
+numeric	Num.	2	num_mesas	Número de mesas.
+numeric	Num.	3	n_censo_ine	Censo del I.N.E.
+numeric	Num.	3	n_escrutinio_censo	Censo de escrutinio.
+numeric	Num.	3	n_escrutinio_censo_extr	Censo C.E.R.E. en escrutinio (Residentes Extranjeros).
+numeric	Num.	3	n_votantes_censo_extr	Total votantes C.E.R.E. (Residentes Extranjeros).
+numeric	Num.	3	n_partici_primer_av	Votantes del primer avance de participación.
+numeric	Num.	3	n_partici_segund_av	Votantes del segundo avance de participación.
+numeric	Num.	3	n_vot_blanco	Votos en blanco.
+numeric	Num.	3	n_vot_nulos	Votos nulos.
+numeric	Num.	3	n_vot_candidaturas	Votos a candidaturas.
+numeric	Num.	2	n_escanyos	Número de ‘Escaños’ a distribuir.
+character	Alf.	1	ind_dat_oficiales	Datos oficiales (Si/No).

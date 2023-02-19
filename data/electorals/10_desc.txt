@@ -1,0 +1,11 @@
+tipo	tipo2	width	nom	desc
+numeric	Num.	2	tipo_eleccion	Tipo de elección.
+numeric	Num.	4	anyo_proceso	Año del proceso electoral.
+numeric	Num.	2	mes_proceso	Mes del proceso electoral.
+numeric	Num.	1	num_vuelta	Número de vuelta (en procesos a una sola vuelta = 1).
+numeric	Num.	2	id_ca	Código de la Comunidad Autónoma o 99 si se trata del Total Nacional del C.E.R.A.
+numeric	Num.	10	id_sscc	Código de la Comunidad Autónoma o 99 si se trata del Total Nacional del C.E.R.A.
+character	Alf.	1	control_sscc	Código de la sección (tres dígitos seguidos de un espacio, letra mayúscula u otro dígito).
+character	Alf.	1	id_mesa	Código de la mesa (una letra mayúscula identificando la mesa o una ‘U’ en caso de mesa única).
+numeric	Num.	6	cod_candidatura	Código de la candidatura o del Senador en elecciones al Senado.
+numeric	Num.	7	n_vot_candidatura	Votos obtenidos por la candidatura o el Senador.
