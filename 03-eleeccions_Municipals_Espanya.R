@@ -3,6 +3,7 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 
+
 # https://infoelectoral.interior.gob.es/opencms/es/elecciones-celebradas/area-de-descargas/
 
 # congreso
@@ -154,6 +155,7 @@ resum[grepl("ERC",toupper(resum$siglas_candidatura )),]
 resum[grepl("REPUBLICANA",toupper(resum$denom_candidatura )),] # 6649    
 resum[grepl("JUNTS",toupper(resum$denom_candidatura )),]
 resum[grepl("CUP",toupper(resum$denom_candidatura )),]
+resum[grepl("COMÚ",toupper(resum$denom_candidatura )),]
 
 d1012_esp_mun_2019[substr(d1012_esp_mun_2019$id_sscc,1,5) =="08113",] %>% 
 #  group_by(cod_candidatura_nacional) %>% 
@@ -192,7 +194,14 @@ cod_candidatura n_vot_candidatura
 
 df03_esp_mun_2019[grepl("1458",toupper(df03_esp_mun_2019$cod_candidatura )),]
 
+df03_esp_mun_2019$denom_candidatura_short <- substr(df03_esp_mun_2019$denom_candidatura,1,100)
+
 df03_esp_mun_2019[grepl("CUP",toupper(df03_esp_mun_2019$denom_candidatura )),c("cod_candidatura_nacional", "siglas_candidatura")]
+df03_esp_mun_2019[grepl("COMÚ",toupper(df03_esp_mun_2019$denom_candidatura )),c("cod_candidatura_nacional","denom_candidatura_short")]
+
+df03_esp_mun_2019[df03_esp_mun_2019$cod_candidatura_nacional==6398,]
+
+
 
 dim(df10_esp_mun_2019)
 df10_esp_mun_2019_cand<-merge(df03_esp_mun_2019 %>% select(cod_candidatura,siglas_candidatura,denom_candidatura,cod_candidatura_nacional)
@@ -228,10 +237,31 @@ ERC   <- c(6649)
 VOX   <- c(5779,4621)
 JUNTS   <- c(1464)
 PNV   <- c(1245)
-PODEMOS_IU   <- c(8014,2334,1185,4437,1415,4960,1428,8012,5141,5914,3384)
+PODEMOS_IU   <- c(8015,8004,8014,2334,1185,4437,1415,4960,1428,8012,5141,5914,3384,5083,3741,1272,1313,4549,4553,2483,3984,6004,8023,8024)
 EH_Bildu   <- c(5380)
 BNG <- c(2364)
 CUP <- c(1458,7185)
+
+1                     6649            161189
+2                     8015            156493
+3                     1287            138885
+4                     1456             99452
+5                     1464             79280
+6                     1522             37786
+7                     1458             29318
+8                     1359             28253
+9                     5779              8751
+10                     3175              6181
+11                     4799              1891
+12                     6398              1197
+13                     6056               501
+14                     3766               432
+15                     1467               379
+16                     6240               373
+17                     5807               313
+18                     4230               303
+19                     2481               215
+20                     4903               195
 
 
 table(d1012_esp_mun_2019$control_sscc  )
@@ -282,6 +312,7 @@ d0911_esp_mun_2019_sscc <- d0911_esp_mun_2019 %>%
             ,n_partici_segund_av = sum(n_partici_segund_av)
             ,n_vot_blanco = sum(n_vot_blanco)
             ,n_vot_nulos = sum(n_vot_nulos)
+            ,n_vot_candidaturas = sum(n_vot_candidaturas)
             ,tipo_municipio = max(tipo_municipio)
             ,PSOE = sum(PSOE)
             ,PP = sum(PP)
@@ -300,7 +331,7 @@ d0911_esp_mun_2019_sscc <- d0911_esp_mun_2019 %>%
 
 d0911_esp_mun_2019_mun <- d0911_esp_mun_2019 %>% 
   mutate(id_mun = substr(id_sscc,1,5)) %>% 
-  group_by(tipo_eleccion,anyo_proceso,mes_proceso,id_ca,id_sscc) %>% 
+  group_by(tipo_eleccion,anyo_proceso,mes_proceso,id_ca,id_mun) %>% 
   summarise(n_censo_ine = sum(n_censo_ine)
             ,n_escrutinio_censo = sum(n_escrutinio_censo)
             ,n_escrutinio_censo_extr = sum(n_escrutinio_censo_extr)
@@ -309,6 +340,7 @@ d0911_esp_mun_2019_mun <- d0911_esp_mun_2019 %>%
             ,n_partici_segund_av = sum(n_partici_segund_av)
             ,n_vot_blanco = sum(n_vot_blanco)
             ,n_vot_nulos = sum(n_vot_nulos)
+            ,n_vot_candidaturas = sum(n_vot_candidaturas)
             ,tipo_municipio = max(tipo_municipio)
             ,PSOE = sum(PSOE)
             ,PP = sum(PP)
@@ -331,3 +363,5 @@ saveRDS(d0911_esp_mun_2019_mun,file="data/electorals/d0911_esp_mun_2019_mun.RDat
 d0911_esp_mun_2019 <- readRDS(file="data/electorals/d0911_esp_mun_2019.RData")
 d0911_esp_mun_2019_sscc <- readRDS(file="data/electorals/d0911_esp_mun_2019_sscc.RData")
 d0911_esp_mun_2019_mun <- readRDS(file="data/electorals/d0911_esp_mun_2019_mun.RData")
+head(d0911_esp_mun_2019_mun)
+
